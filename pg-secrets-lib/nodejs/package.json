@@ -1,0 +1,16 @@
+{
+  "name": "layers",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.808.0",
+    "pg": "^8.16.0"
+  }
+}

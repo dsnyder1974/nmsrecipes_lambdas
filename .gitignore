@@ -1,0 +1,39 @@
+# Node.js dependencies
+**/node_modules/
+
+# ZIP archives
+*.zip
+
+# Terraform state and cache
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+crash.log
+
+# Environment variables
+.env
+.env.*
+
+# System files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+dist/
+build/
+tmp/
+.cache/
+*.tmp
+
+# VS Code
+.vscode/
