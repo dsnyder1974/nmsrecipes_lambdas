@@ -15,7 +15,11 @@ Compress-Archive -Path $SourcePaths -DestinationPath $ZipFilePath
 
 # Step 3: Update Lambda function code using AWS CLI
 Write-Host "Updating Lambda function $LambdaFunctionName with $ZipFilePath..."
-aws lambda update-function-code --function-name $LambdaFunctionName --zip-file fileb://$ZipFilePath
+$updateResult = aws lambda update-function-code `
+    --function-name $LambdaFunctionName `
+    --zip-file fileb://$ZipFilePath `
+    --output json | ConvertFrom-Json
+Write-Host "Function updated: $($updateResult.FunctionArn)"
 
 # Done
 Write-Host "Lambda function updated successfully."

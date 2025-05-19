@@ -1,8 +1,10 @@
 import { getDbClient } from '/opt/nodejs/db.mjs';
+import { withCors } from '/opt/nodejs/withCors.mjs';
 
-export async function handler(event) {
+// export async function handler(event) {
+const mainHandler = async (event) => {
 
-const client = await getDbClient();
+  const client = await getDbClient();
 
   try {
     await client.connect();
@@ -24,3 +26,5 @@ const client = await getDbClient();
     };
   }
 }
+
+export const handler = withCors(mainHandler);

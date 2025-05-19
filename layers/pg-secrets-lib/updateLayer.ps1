@@ -4,9 +4,8 @@ param (
     [string]$Runtime = "nodejs22.x",
     [string]$Region = "us-east-2",
     [string]$Description = "PostgreSQL client + Secrets Manager layer",
-    [string]$LambdaCategoryDir = ".\..\pgCategory",
-    [string]$Stage = "dev",
-    [string]$FunctionName = "my-lambda-function"
+    [string]$LambdaCategoryDir = ".\..\..\pgCategory",
+    [string]$Stage = "dev"
 )
 
 # Step 1: Compress the layer
@@ -37,10 +36,35 @@ $lambdaFolders = Get-ChildItem -Path $LambdaCategoryDir -Directory
 foreach ($folder in $lambdaFolders) {
     $functionName = "$Stage-$($folder.Name)"
 
-    Write-Host "Updating Lambda function '$functionName' with new layer..."
+    # Step 3.1: Get current attached layer ARNs
+    $existingLayers = aws lambda get-function-configuration `
+        --function-name $functionName `
+        --region $Region `
+        --query "Layers[*].Arn" `
+        --output json | ConvertFrom-Json
+    Write-Host "Current layers for '$functionName':"
+    $existingLayers | ForEach-Object { Write-Host "  $_" }
+
+    # Step 3.2: Convert to array and filter out any older versions of the same layer name
+    $filteredLayers = @()
+    foreach ($layer in $existingLayers) {
+        # Write-Host "Checking layer: $layer"
+        if ($layer -notlike "*:layer:${LayerName}:*") {
+            $filteredLayers += $layer
+        }
+    }
+
+    # Step 3.3: Append the new version
+    $updatedLayers = $filteredLayers + $latestArn
+    Write-Host "New layers for '$functionName':"
+    $updatedLayers | ForEach-Object { Write-Host "  $_" }
+
+    # Step 3.4: Update Lambda configuration
+    # Note: The --layers parameter expects a list of ARNs separated by a space
+    Write-Host "Updating Lambda function '$functionName' with new layers..."
     $updateOutput = aws lambda update-function-configuration `
         --function-name $functionName `
-        --layers $latestArn `
+        --layers @($updatedLayers) `
         --region $Region `
         | ConvertFrom-Json
     Write-Host "Lambda '$($updateOutput.FunctionName)' updated."
