@@ -8,6 +8,35 @@ param (
     [string]$Stage = "dev"
 )
 
+# Write-Status usage example:
+# Write-Status -Parts @(
+#     "Updating function ",
+#     @{ Text = "dev-pgListCategories"; Color = "Cyan" },
+#     " with layer ",
+#     @{ Text = "withCors-lib:4"; Color = "Yellow" },
+#     ".",
+#     @{ Text = "Success"; Color = "Green" }
+# )
+function Write-Status {
+    param (
+        [Parameter(Mandatory=$true)]
+        [array]$Parts
+    )
+
+    foreach ($part in $Parts) {
+        if ($part -is [string]) {
+            Write-Host $part -NoNewline
+        } elseif ($part -is [hashtable]) {
+            $text = $part['Text']
+            $color = $part['Color']
+            Write-Host $text -ForegroundColor $color -NoNewline
+        }
+    }
+
+    # End the line
+    Write-Host ""
+}
+
 # Step 1: Compress the layer
 if (Test-Path $ZipPath) {
     Remove-Item $ZipPath -Force
