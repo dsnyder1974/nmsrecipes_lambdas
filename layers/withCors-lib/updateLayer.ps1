@@ -1,6 +1,6 @@
 param (
     [string]$LayerName = "withCors-lib",
-    [string]$ZipPath = ".\withCorse-lib.zip",
+    [string]$ZipPath = ".\withCors-lib.zip",
     [string]$Runtime = "nodejs22.x",
     [string]$Region = "us-east-2",
     [string]$Description = "Add cors headers layer",

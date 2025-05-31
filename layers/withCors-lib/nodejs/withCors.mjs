@@ -1,5 +1,5 @@
 export const withCors = (handler) => async (event, context) => {
-  const origin = event.headers?.origin || '*';
+  const origin = event.headers?.origin || 'http://localhost:3000';
 
   // Handle preflight (OPTIONS) requests
   if (event.httpMethod === 'OPTIONS') {
@@ -8,7 +8,7 @@ export const withCors = (handler) => async (event, context) => {
       headers: {
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Credentials': 'true'
       },
       body: ''
@@ -24,7 +24,7 @@ export const withCors = (handler) => async (event, context) => {
         ...(result.headers || {}),
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Credentials': 'true'
       }
     };
@@ -34,7 +34,7 @@ export const withCors = (handler) => async (event, context) => {
       headers: {
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Headers': 'Content-Type,Authorization',
-        'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Credentials': 'true'
       },
       body: JSON.stringify({ error: err.message })
