@@ -1,6 +1,7 @@
 # AWS Lambda Project: PostgreSQL Integration with Secrets Manager
 
-This project provides a modular serverless architecture using AWS Lambda functions, managed via Terraform and AWS CLI. It includes reusable Lambda layers for database and secrets management, and a collection of categorized Lambda functions.
+This project provides a modular serverless architecture using AWS Lambda functions in Node.js, managed via Terraform and AWS CLI. It includes reusable Lambda layers for database and secrets management, and a collection of categorized Lambda functions.
+ The project's progress is tracked in [**Notion**](https://perpetual-cobalt-b4e.notion.site/1f50ea20f0f480339cf7f733b899b07a?v=1f50ea20f0f4814d8434000ca574d7d9&source=copy_link).
 
 ---
 
