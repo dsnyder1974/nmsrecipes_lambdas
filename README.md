@@ -8,19 +8,22 @@ This project provides a modular serverless architecture using AWS Lambda functio
 
 ```
 pgCategory/
-├── pgListCategories/
+├── pgListCategories/          # Lambda to list categories from Postgres
 │   ├── index.mjs              # Lambda handler
 │   ├── package.json
 │   ├── package-lock.json
 │   └── update_function.ps1    # Script to update function
+├── ...
 
-pg-secrets-lib/
-├── updateLayer.ps1            # Automates layer compression & publishing
-└── nodejs/
-    ├── db.mjs                 # DB client helper
-    ├── secret.mjs             # Secrets Manager logic
-    ├── package.json
-    └── node_modules/          # Shared dependencies
+layers/                        # Lambda layers commong to all lambdas, keeping things DRY
+├── pg-secrets-lib/            # Handles db connections, aquires credentials from Secrets Manager
+│   ├── updateLayer.ps1        # Automates publishing and updates all lambdas to use new layer
+│   └── nodejs/
+│       ├── db.mjs                 # DB client helper
+│       ├── secret.mjs             # Secrets Manager logic
+│       ├── package.json
+│       └── node_modules/          # Shared dependencies
+├── ...
 ```
 
 ---
@@ -35,9 +38,9 @@ cd pgCategory/pgListCategories
 npm install
 ```
 
-For the shared layer:
+Each shared layer (e.g. `pg-secrets-lib`) contains its own `package.json`:
 ```bash
-cd pg-secrets-lib/nodejs
+cd layers/pg-secrets-lib/nodejs
 npm install
 ```
 
@@ -47,13 +50,13 @@ npm install
 Run the provided PowerShell script to compress and publish the shared `pg-secrets-lib` layer:
 
 ```powershell
-.\pg-secrets-lib\updateLayer.ps1
+.\layers\pg-secrets-lib\updateLayer.ps1
 ```
 
 This:
 - Zips the `nodejs/` directory
 - Publishes a new Lambda layer version
-- Updates all Lambda functions in `pgCategory/` with the new layer
+- Updates all Lambda functions with the new layer
 
 ---
 
@@ -73,4 +76,4 @@ Each Lambda folder includes a script (e.g., `update_function.ps1`) to deploy or 
 ## ✅ Future Enhancements
 
 - Add GitHub Actions for automated CI/CD
-- Extend `pgCategory/` with additional lambdas
+- Extend lambdas to cover more functionality across the app
