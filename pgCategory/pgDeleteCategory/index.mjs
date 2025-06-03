@@ -19,8 +19,8 @@ const mainHandler = async (event) => {
     }
 
     query = `
-      DELETE FROM category
-      WHERE id = $1
+      DELETE FROM ingestor.Category
+      WHERE category_id = $1
       RETURNING *;
     `;
 

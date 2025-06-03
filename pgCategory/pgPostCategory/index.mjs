@@ -18,7 +18,7 @@ const mainHandler = async (event) => {
   }
 
   try {
-    const { name, image } = body;
+    const { name, description } = body;
 
     if (!name) {
       return {
@@ -28,12 +28,12 @@ const mainHandler = async (event) => {
     }
 
     const query = `
-      INSERT INTO category (name, image)
+      INSERT INTO ingestor.Category (name, description)
       VALUES ($1, $2)
       RETURNING *;
     `;
 
-    const values = [name, image || null];
+    const values = [name, description || null];
 
     console.log('Query:', query, 'with values:', values);
 

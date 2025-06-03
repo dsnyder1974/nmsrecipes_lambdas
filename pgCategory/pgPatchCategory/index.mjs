@@ -12,7 +12,7 @@ const mainHandler = async (event) => {
     const body = JSON.parse(event.body);
 
     const id = event.pathParameters && event.pathParameters.id;
-    const { name, image } = body;
+    const { name, description } = body;
 
     if (!id) {
       return {
@@ -30,9 +30,9 @@ const mainHandler = async (event) => {
       values.push(name);
     }
 
-    if (image !== undefined) {
-      updates.push(`image = $${index++}`);
-      values.push(image);
+    if (description !== undefined) {
+      updates.push(`description = $${index++}`);
+      values.push(description);
     }
 
     if (updates.length === 0) {
@@ -45,9 +45,9 @@ const mainHandler = async (event) => {
     values.push(id); // Last param is ID for WHERE clause
 
     query = `
-      UPDATE category
+      UPDATE ingestor.Category
       SET ${updates.join(', ')}
-      WHERE id = $${index}
+      WHERE category_id = $${index}
       RETURNING *;
     `;
 
