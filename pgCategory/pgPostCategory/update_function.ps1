@@ -1,6 +1,6 @@
 # Variables
-$LambdaFunctionName = "dev-pgPostCategory"  # Change to your Lambda function name
-$SourcePaths = @("index.mjs", "package.json")  # Files/Folders to zip
+$LambdaFunctionName = "dev-pgPostCategory"
+$SourcePaths = @("index.mjs", "package.json")
 $ZipFilePath = "dev-pgPostCategory.zip"
 
 # Step 1: Remove existing zip if exists

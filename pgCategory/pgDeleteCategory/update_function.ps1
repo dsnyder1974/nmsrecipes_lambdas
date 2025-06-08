@@ -1,6 +1,6 @@
 # Variables
-$LambdaFunctionName = "dev-pgDeleteCategory"  # Change to your Lambda function name
-$SourcePaths = @("index.mjs", "package.json")  # Files/Folders to zip
+$LambdaFunctionName = "dev-pgDeleteCategory"
+$SourcePaths = @("index.mjs", "package.json")
 $ZipFilePath = "dev-pgDeleteCategory.zip"
 
 # Step 1: Remove existing zip if exists

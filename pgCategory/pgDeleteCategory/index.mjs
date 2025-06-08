@@ -69,4 +69,4 @@ const mainHandler = async (event) => {
   }
 };
 
-export const handler = withCors(mainHandler);
+export const handler = mainHandler;

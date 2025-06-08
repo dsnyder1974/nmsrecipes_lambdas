@@ -1,6 +1,6 @@
 # Variables
-$LambdaFunctionName = "dev-pgListCategories"  # Change to your Lambda function name
-$SourcePaths = @("index.mjs", "package.json")  # Files/Folders to zip
+$LambdaFunctionName = "dev-pgListCategories"
+$SourcePaths = @("index.mjs", "package.json")
 $ZipFilePath = "dev-pgListCategories.zip"
 
 # Step 1: Remove existing zip if exists
