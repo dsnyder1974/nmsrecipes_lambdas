@@ -12,7 +12,7 @@ const mainHandler = async (event) => {
     const body = JSON.parse(event.body);
 
     const id = event.pathParameters && event.pathParameters.id;
-    const { name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url } = body;
+    const { name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url, value } = body;
 
     if (!id) {
       return {
@@ -53,6 +53,11 @@ const mainHandler = async (event) => {
     if (image_url !== undefined) {
       updates.push(`image_url = $${index++}`);
       values.push(image_url);
+    }
+
+    if (value !== undefined) {
+      updates.push(`value = $${index++}`);
+      values.push(value);
     }
 
     if (updates.length === 0) {

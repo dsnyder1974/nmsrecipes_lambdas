@@ -7,7 +7,7 @@ const mainHandler = async (event) => {
 
   try {
     const query = `
-      SELECT item_id, name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url
+      SELECT item_id, name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url, value
       FROM ingestor.Item
       ORDER BY name;
     `;

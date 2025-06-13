@@ -18,7 +18,7 @@ const mainHandler = async (event) => {
   }
 
   try {
-    const { name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url } = body;
+    const { name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url, value } = body;
 
     if (!name) {
       return {
@@ -28,12 +28,12 @@ const mainHandler = async (event) => {
     }
 
     const query = `
-      INSERT INTO ingestor.Item (name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO ingestor.Item (name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url, value)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
     `;
 
-    const values = [name, description || null, buff_id || null, buff_bonus_text || null, buff_duration_minutes || null, image_url || null];
+    const values = [name, description || null, buff_id || null, buff_bonus_text || null, buff_duration_minutes || null, image_url || null, value || 0 ];
 
     console.log('Query:', query, 'with values:', values);
 
