@@ -12,7 +12,7 @@ const mainHandler = async (event) => {
     const body = JSON.parse(event.body);
 
     const id = event.pathParameters && event.pathParameters.id;
-    const { name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url, value } = body;
+    const { name, description, buff_id, buff_bonus_text, buff_duration_minutes, image_url, value, preferred_recipe_id } = body;
 
     if (!id) {
       return {
@@ -58,6 +58,11 @@ const mainHandler = async (event) => {
     if (value !== undefined) {
       updates.push(`value = $${index++}`);
       values.push(value);
+    }
+
+    if (preferred_recipe_id !== undefined) {
+      updates.push(`preferred_recipe_id = $${index++}`);
+      values.push(preferred_recipe_id);
     }
 
     if (updates.length === 0) {
