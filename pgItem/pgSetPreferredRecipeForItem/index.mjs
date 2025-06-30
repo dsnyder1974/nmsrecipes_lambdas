@@ -1,6 +1,12 @@
 import { getDbClient } from '/opt/nodejs/db.mjs';
 import { withCors } from '/opt/nodejs/withCors.mjs';
 
+import { createClient } from 'redis';
+
+const redisUri = `redis://${process.env.REDIS_ENDPOINT}:6379`;
+const redisClient = createClient({ url: redisUri });
+await redisClient.connect();
+
 // export async function handler(event) {
 const mainHandler = async (event) => {
   const client = await getDbClient();
@@ -31,10 +37,12 @@ const mainHandler = async (event) => {
     query = `
       UPDATE ingestor.Item SET preferred_recipe_id = $1 WHERE item_id = $2 RETURNING *
     `;
- 
+
     await client.connect();
 
     const result = await client.query(query, [preferred_recipe_id, id]);
+
+    await redisClient.incr('preferredRecipesVersion');
 
     if (result.rowCount === 0) {
       return {
