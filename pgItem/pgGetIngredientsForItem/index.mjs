@@ -1,12 +1,19 @@
 import { getDbClient } from '/opt/nodejs/db.mjs';
 import { withCors } from '/opt/nodejs/withCors.mjs';
 
+import { createClient } from 'redis';
+
+const redisUri = `redis://${process.env.REDIS_ENDPOINT}:6379`;
+const redisClient = createClient({ url: redisUri });
+await redisClient.connect();
+
 // export async function handler(event) {
 const mainHandler = async (event) => {
   const client = await getDbClient();
 
   let query;
   let id;
+  let cacheKey;
 
   try {
     id = event.pathParameters && event.pathParameters.id;
@@ -18,9 +25,21 @@ const mainHandler = async (event) => {
       };
     }
 
+    const version = (await redisClient.get('preferredRecipesVersion')) || '0';
+    cacheKey = `ingredients:deep:${id}:v${version}`;
+
+    const cached = await redisClient.get(cacheKey);
+    if (cached) {
+      console.log(`Cache hit: ${cacheKey}`);
+      return {
+        statusCode: 200,
+        body: cached,
+      };
+    }
+
     query = `
       WITH RECURSIVE FullTree AS (
-        -- 🌱 Base case: root item's recipe ingredients
+        -- Base case: root item's recipe ingredients
         SELECT
           r.recipe_id,
           r.produced_item_id,
@@ -80,7 +99,7 @@ const mainHandler = async (event) => {
         JOIN ingestor.Item i ON i.item_id = r.ingredient3_id
         WHERE root.item_id = $1 AND r.ingredient3_id IS NOT NULL
 
-        -- 🔁 Recursive expansion of ingredients
+        -- Recursive expansion of ingredients
         UNION ALL
 
         SELECT
@@ -115,12 +134,12 @@ const mainHandler = async (event) => {
           SELECT i3.item_id, i3.name FROM ingestor.Item i3 WHERE i3.item_id = r.ingredient3_id
         ) ing ON TRUE
 
-        -- ✅ cycle protection
+        -- cycle protection
         WHERE r.recipe_id IS NOT NULL
           AND NOT (ing.item_id = ANY(ft.path))
       )
 
-      -- 🎯 Final leaf-node aggregation
+      -- Final leaf-node aggregation
       SELECT
         ft.ingredient_item_id,
         ft.ingredient_name,
@@ -151,6 +170,10 @@ const mainHandler = async (event) => {
         body: JSON.stringify({ error: 'Record not found' }),
       };
     }
+
+    const payload = JSON.stringify(result.rows);
+    await redisClient.set(cacheKey, payload, { EX: 3600 });
+    console.log(`Cache miss: ${cacheKey} - Data cached`);
 
     return {
       statusCode: 200,

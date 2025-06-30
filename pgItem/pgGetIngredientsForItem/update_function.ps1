@@ -1,6 +1,6 @@
 # Variables
 $LambdaFunctionName = "dev-pgGetIngredientsForItem"
-$SourcePaths = @("index.mjs", "package.json")
+$SourcePaths = @("index.mjs", "package.json", "package-lock.json", "node_modules")
 $ZipFilePath = "dev-pgGetIngredientsForItem.zip"
 
 # Step 1: Remove existing zip if exists

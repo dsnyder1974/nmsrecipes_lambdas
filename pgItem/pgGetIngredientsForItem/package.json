@@ -4,5 +4,6 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "redis": "^5.5.6"
   }
 }
